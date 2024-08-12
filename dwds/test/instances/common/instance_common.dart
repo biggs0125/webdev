@@ -379,6 +379,18 @@ void runTests({
         expect(inspector.isDisplayableObject(instance), isTrue);
       });
 
+
+      test('for a stream', () async {
+        final remote = await inspector.jsEvaluate(
+          libraryVariableExpression('stream', compilationMode),
+        );
+        final instance = await inspector.instanceFor(remote);
+        expect(instance!.kind, InstanceKind.kPlainInstance);
+        final classRef = instance.classRef!;
+        expect(classRef.name, '_ControllerStream<int>');
+        expect(inspector.isDisplayableObject(instance), isTrue);
+     });
+
       test('for a Dart error', () async {
         final remoteObject = await inspector.jsEvaluate(newDartError);
         final instance = await inspector.instanceFor(remoteObject);
