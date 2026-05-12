@@ -2,7 +2,9 @@
 
 1. In the root directory of `webdev`, run
    `pub global activate --source path webdev`
-1. Uncomment the dwds dependency override in `/webdev/webdev/pubspec.yaml`, then
+1. [OPTIONAL] If you are developing `webdev` against local changes in `dwds`, 
+   add a dependency override in `webdev/webdev/pubspec.yaml` pointing to your 
+   local `dwds` directory (e.g., in the SDK or a separate checkout), then 
    run `dart run build_runner build` from `/webdev/webdev` directory
    - *Note: You will have to comment and build, and then uncomment and build,
      each time you need to pick up new changes*
