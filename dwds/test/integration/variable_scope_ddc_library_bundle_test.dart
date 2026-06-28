@@ -7,11 +7,11 @@
 library;
 
 import 'package:dwds/expression_compiler.dart';
+import 'package:dwds/testing/integration/variable_scope.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
 import 'fixtures/library_bundle_context.dart';
-import 'variable_scope_common.dart';
 
 void main() {
   // Enable verbose logging for debugging.

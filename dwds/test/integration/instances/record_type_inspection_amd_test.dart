@@ -8,12 +8,12 @@
 library;
 
 import 'package:dwds/src/services/expression_compiler.dart';
+import 'package:dwds/testing/integration/record_type_inspection.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
 import '../fixtures/build_daemon_context.dart';
 import '../fixtures/frontend_server_context.dart';
-import 'common/record_type_inspection_common.dart';
 
 void main() {
   // Enable verbose logging for debugging.

@@ -10,11 +10,11 @@ library;
 import 'dart:io';
 
 import 'package:dwds/expression_compiler.dart';
+import 'package:dwds/testing/integration/evaluate_circular.dart';
 import 'package:dwds/testing/project.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
-import 'evaluate_circular_common.dart';
 import 'fixtures/build_daemon_context.dart';
 import 'fixtures/frontend_server_context.dart';
 

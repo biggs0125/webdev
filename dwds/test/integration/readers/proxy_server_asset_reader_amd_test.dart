@@ -6,11 +6,11 @@
 library;
 
 import 'package:dwds/expression_compiler.dart';
+import 'package:dwds/testing/integration/proxy_server_asset_reader.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
 import '../fixtures/build_daemon_context.dart';
-import 'proxy_server_asset_reader_common.dart';
 
 void main() {
   final provider = TestSdkConfigurationProvider(

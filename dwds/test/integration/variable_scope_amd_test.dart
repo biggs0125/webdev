@@ -6,11 +6,11 @@
 @Timeout(Duration(minutes: 2))
 library;
 
+import 'package:dwds/testing/integration/variable_scope.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
 import 'fixtures/build_daemon_context.dart';
-import 'variable_scope_common.dart';
 
 void main() {
   // set to true for debug logging.
