@@ -6,14 +6,14 @@ import 'dart:async';
 
 import 'package:dwds/src/debugging/dart_scope.dart';
 import 'package:dwds/src/services/chrome/chrome_proxy_service.dart';
+import 'package:dwds/testing/project.dart';
+import 'package:dwds/testing/utilities.dart';
 import 'package:dwds_test_common/logging.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 
 import 'fixtures/build_daemon_context.dart';
-import 'fixtures/project.dart';
-import 'fixtures/utilities.dart';
 
 void testAll({required TestSdkConfigurationProvider provider}) {
   final context = BuildDaemonTestContext(TestProject.testScopes, provider);

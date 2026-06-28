@@ -16,14 +16,14 @@ import 'package:dwds/src/loaders/strategy.dart';
 import 'package:dwds/src/readers/proxy_server_asset_reader.dart';
 import 'package:dwds/src/services/expression_compiler.dart';
 import 'package:dwds/src/services/expression_compiler_service.dart';
+import 'package:dwds/testing/context.dart';
+import 'package:dwds/testing/utilities.dart';
 import 'package:file/local.dart';
 import 'package:logging/logging.dart' as logging;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_proxy/shelf_proxy.dart';
 
 import 'build_daemon_context.dart';
-import 'context.dart';
-import 'utilities.dart';
 
 class LibraryBundleTestContext extends TestContext {
   BuildDaemonClient? _daemonClient;

@@ -15,6 +15,9 @@ import 'package:dwds/expression_compiler.dart';
 import 'package:dwds/src/services/chrome/chrome_proxy_service.dart';
 import 'package:dwds/src/utilities/dart_uri.dart';
 import 'package:dwds/src/utilities/shared.dart';
+import 'package:dwds/testing/context.dart';
+import 'package:dwds/testing/project.dart';
+import 'package:dwds/testing/utilities.dart';
 import 'package:dwds_test_common/logging.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:http/http.dart' as http;
@@ -22,10 +25,6 @@ import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:vm_service_interface/vm_service_interface.dart';
-
-import '../fixtures/context.dart';
-import '../fixtures/project.dart';
-import '../fixtures/utilities.dart';
 
 void runTests({
   required TestSdkConfigurationProvider provider,

@@ -19,15 +19,14 @@ import 'package:dwds/src/loaders/require.dart';
 import 'package:dwds/src/loaders/strategy.dart';
 import 'package:dwds/src/services/expression_compiler.dart';
 import 'package:dwds/src/utilities/objects.dart';
+import 'package:dwds/testing/debugger_data.dart';
+import 'package:dwds/testing/utilities.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:vm_service/vm_service.dart';
 
 /// A library of fake/stub implementations of our classes and their supporting
 /// classes (e.g. WipConnection) for unit testing.
 import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart';
-
-import 'debugger_data.dart';
-import 'utilities.dart';
 
 /// Constructs a trivial Isolate we can use when we need to provide one but
 /// don't want go through initialization.

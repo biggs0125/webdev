@@ -5,16 +5,16 @@
 import 'package:dwds/expression_compiler.dart';
 import 'package:dwds/src/config/tool_configuration.dart';
 import 'package:dwds/src/debugging/chrome_inspector.dart';
+import 'package:dwds/testing/context.dart';
+import 'package:dwds/testing/project.dart';
+import 'package:dwds/testing/utilities.dart';
 import 'package:dwds_test_common/logging.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart';
 
-import '../../fixtures/context.dart';
 import '../../fixtures/frontend_server_context.dart';
-import '../../fixtures/project.dart';
-import '../../fixtures/utilities.dart';
 import 'test_inspector.dart';
 
 void runTypeSystemVerificationTests({

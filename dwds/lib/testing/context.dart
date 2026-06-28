@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: depend_on_referenced_packages
 // @skip_package_deps_validation
 
 import 'dart:async';
@@ -19,6 +20,9 @@ import 'package:dwds/src/services/chrome/chrome_proxy_service.dart';
 import 'package:dwds/src/services/expression_compiler.dart';
 import 'package:dwds/src/utilities/dart_uri.dart';
 import 'package:dwds/src/utilities/server.dart';
+import 'package:dwds/testing/project.dart';
+import 'package:dwds/testing/server.dart';
+import 'package:dwds/testing/utilities.dart';
 import 'package:dwds_test_common/logging.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:dwds_test_common/utilities.dart';
@@ -33,11 +37,6 @@ import 'package:vm_service/vm_service.dart';
 import 'package:vm_service/vm_service_io.dart';
 import 'package:webdriver/async_io.dart';
 import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart';
-
-import '../../frontend_server_common/devfs.dart';
-import 'project.dart';
-import 'server.dart';
-import 'utilities.dart';
 
 final _exeExt = Platform.isWindows ? '.exe' : '';
 
@@ -65,6 +64,8 @@ typedef TestContextFactory = TestContext Function(
 );
 
 abstract class TestContext {
+  static const reloadedSourcesFileName = 'reloaded_sources.json';
+
   final TestProject project;
   final TestSdkConfigurationProvider sdkConfigurationProvider;
 
@@ -219,7 +220,7 @@ abstract class TestContext {
       _port = httpServer.port;
 
       final reloadedSourcesUri = Uri.parse(
-        'http://localhost:$_port/${WebDevFS.reloadedSourcesFileName}',
+        'http://localhost:$_port/$reloadedSourcesFileName',
       );
 
       await modeSetUp(
@@ -472,13 +473,11 @@ abstract class TestContext {
       );
     }
 
-    _reloadedSources.add(
-      WebDevFS.createReloadedSourceEntry(
-        src: '/$srcPath.ddc.js',
-        module: moduleName,
-        libraries: [libUri],
-      ),
-    );
+    _reloadedSources.add({
+      'src': '/$srcPath.ddc.js',
+      'module': moduleName,
+      'libraries': [libUri],
+    });
   }
 
   /// Contains contents of the reloaded_sources.json manifest file.
@@ -500,7 +499,7 @@ abstract class TestContext {
   Handler handleReloadedSources(Handler proxy) {
     return (request) {
       final path = request.url.path;
-      if (path.endsWith(WebDevFS.reloadedSourcesFileName)) {
+      if (path.endsWith(reloadedSourcesFileName)) {
         return shelf.Response.ok(jsonEncode(_reloadedSources));
       }
       return proxy(request);

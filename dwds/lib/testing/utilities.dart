@@ -10,8 +10,8 @@ import 'package:dwds/src/loaders/strategy.dart';
 import 'package:dwds/src/servers/devtools.dart';
 import 'package:dwds/src/services/expression_compiler.dart';
 
-import 'context.dart';
-import 'fakes.dart';
+import 'package:dwds/testing/context.dart';
+import 'package:dwds/testing/fakes.dart';
 
 /// Retries a callback function with a delay until the result is the
 /// [expectedResult] (if provided) or is not null.

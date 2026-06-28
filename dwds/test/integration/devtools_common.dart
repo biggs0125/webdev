@@ -5,6 +5,9 @@
 import 'dart:io';
 
 import 'package:dwds/src/config/tool_configuration.dart';
+import 'package:dwds/testing/context.dart';
+import 'package:dwds/testing/project.dart';
+import 'package:dwds/testing/utilities.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
@@ -12,9 +15,6 @@ import 'package:vm_service/vm_service.dart';
 import 'package:webdriver/io.dart';
 
 import 'fixtures/build_daemon_context.dart';
-import 'fixtures/context.dart';
-import 'fixtures/project.dart';
-import 'fixtures/utilities.dart';
 
 Future<void> _waitForPageReady(TestContext context) async {
   var attempt = 100;

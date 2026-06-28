@@ -11,6 +11,8 @@ import 'package:dwds/expression_compiler.dart';
 import 'package:dwds/src/loaders/frontend_server_strategy_provider.dart';
 import 'package:dwds/src/loaders/strategy.dart';
 import 'package:dwds/src/utilities/server.dart';
+import 'package:dwds/testing/context.dart';
+import 'package:dwds/testing/utilities.dart';
 import 'package:dwds_test_common/utilities.dart';
 import 'package:file/local.dart';
 import 'package:logging/logging.dart' as logging;
@@ -18,8 +20,6 @@ import 'package:path/path.dart' as p;
 import 'package:shelf/shelf.dart';
 
 import '../../frontend_server_common/resident_runner.dart';
-import 'context.dart';
-import 'utilities.dart';
 
 class FrontendServerTestContext extends TestContext {
   ResidentWebRunner? _webRunner;

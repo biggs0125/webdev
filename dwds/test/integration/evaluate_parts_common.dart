@@ -2,6 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:dwds/testing/context.dart';
+import 'package:dwds/testing/project.dart';
+import 'package:dwds/testing/utilities.dart';
 import 'package:dwds_test_common/logging.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
@@ -9,9 +12,6 @@ import 'package:vm_service/vm_service.dart';
 import 'package:vm_service_interface/vm_service_interface.dart';
 
 import 'fixtures/build_daemon_context.dart';
-import 'fixtures/context.dart';
-import 'fixtures/project.dart';
-import 'fixtures/utilities.dart';
 
 void testAll({
   required TestSdkConfigurationProvider provider,
