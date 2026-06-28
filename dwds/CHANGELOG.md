@@ -1,3 +1,8 @@
+## 27.1.3
+
+- Move test helpers to `lib/testing` so that downstream packages can write their
+  own integration tests.
+
 ## 27.1.2
 
 - Bump the min sdk to 3.13.0-107.0.dev.
