@@ -14,8 +14,6 @@ import 'package:vm_service/vm_service.dart';
 // ignore: deprecated_member_use
 import 'package:webdriver/io.dart';
 
-import 'fixtures/build_daemon_context.dart';
-
 Future<void> _waitForPageReady(TestContext context) async {
   var attempt = 100;
   while (attempt-- > 0) {
@@ -29,8 +27,11 @@ Future<void> _waitForPageReady(TestContext context) async {
 TypeMatcher<Event> _hasKind(String kind) =>
     isA<Event>().having((Event e) => e.kind, 'kind', kind);
 
-void testAll({required TestSdkConfigurationProvider provider}) {
-  final context = BuildDaemonTestContext(TestProject.test, provider);
+void testAll({
+  required TestSdkConfigurationProvider provider,
+  required TestContextFactory contextFactory,
+}) {
+  final context = contextFactory(TestProject.test, provider);
 
   for (final serveFromDds in [true, false]) {
     group('Injected client with DevTools served from '

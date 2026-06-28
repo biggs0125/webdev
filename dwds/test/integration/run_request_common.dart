@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:dwds/testing/context.dart';
 import 'package:dwds/testing/project.dart';
 import 'package:dwds/testing/utilities.dart';
 import 'package:dwds_test_common/logging.dart';
@@ -12,10 +13,11 @@ import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:vm_service_interface/vm_service_interface.dart';
 
-import 'fixtures/build_daemon_context.dart';
-
-void testAll({required TestSdkConfigurationProvider provider}) {
-  final context = BuildDaemonTestContext(TestProject.test, provider);
+void testAll({
+  required TestSdkConfigurationProvider provider,
+  required TestContextFactory contextFactory,
+}) {
+  final context = contextFactory(TestProject.test, provider);
 
   group('while debugger is attached', () {
     late VmServiceInterface service;

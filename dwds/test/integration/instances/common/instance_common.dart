@@ -14,7 +14,6 @@ import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart';
 
-import '../../fixtures/frontend_server_context.dart';
 import 'test_inspector.dart';
 
 void runTypeSystemVerificationTests({
@@ -46,7 +45,7 @@ void runTypeSystemVerificationTests({
 
     final url = 'org-dartlang-app:///example/scopes/main.dart';
 
-    String libraryName() => context is FrontendServerTestContext
+    String libraryName() => context.usesFrontendServer
         ? 'example/scopes/main.dart'
         : 'example/scopes/main';
 

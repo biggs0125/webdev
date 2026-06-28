@@ -11,11 +11,12 @@ library;
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
+import 'fixtures/build_daemon_context.dart';
 import 'refresh_common.dart';
 
 void main() {
   final provider = TestSdkConfigurationProvider();
   tearDownAll(provider.dispose);
 
-  testAll(provider: provider);
+  testAll(provider: provider, contextFactory: BuildDaemonTestContext.new);
 }

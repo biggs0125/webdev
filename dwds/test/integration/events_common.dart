@@ -16,8 +16,6 @@ import 'package:vm_service/vm_service.dart';
 import 'package:vm_service_interface/vm_service_interface.dart';
 import 'package:webdriver/async_core.dart';
 
-import 'fixtures/frontend_server_context.dart';
-
 void testWithDwds({
   required TestSdkConfigurationProvider provider,
   required TestContextFactory contextFactory,
@@ -74,7 +72,7 @@ void testWithDwds({
           pipe(eventStream, timeout: const Timeout.factor(5)),
           emitsThrough(
             matchesEvent(DwdsEventKind.compilerUpdateDependencies, {
-              if (context is FrontendServerTestContext)
+              if (context.usesFrontendServer)
                 'entrypoint': 'example/hello_world/main_module.bootstrap.js'
               else
                 'entrypoint': 'hello_world/main.dart.bootstrap.js',

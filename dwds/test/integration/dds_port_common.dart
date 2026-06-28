@@ -12,14 +12,15 @@ import 'package:dwds_test_common/logging.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
-import 'fixtures/build_daemon_context.dart';
-
-void testAll({required TestSdkConfigurationProvider provider}) {
+void testAll({
+  required TestSdkConfigurationProvider provider,
+  required TestContextFactory contextFactory,
+}) {
   late TestContext context;
 
   setUp(() {
     setCurrentLogWriter(debug: provider.verbose);
-    context = BuildDaemonTestContext(TestProject.test, provider);
+    context = contextFactory(TestProject.test, provider);
   });
 
   tearDown(() async {

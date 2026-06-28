@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:dwds/expression_compiler.dart';
 import 'package:dwds/testing/context.dart';
 import 'package:dwds/testing/project.dart';
 import 'package:dwds/testing/utilities.dart';
@@ -14,29 +13,6 @@ import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:vm_service_interface/vm_service_interface.dart';
 import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart';
-
-import 'fixtures/build_daemon_context.dart';
-import 'fixtures/frontend_server_context.dart';
-
-void main() {
-  // Enable verbose logging for debugging.
-  const debug = false;
-  final provider = TestSdkConfigurationProvider(
-    verbose: debug,
-    canaryFeatures: true,
-    ddcModuleFormat: ModuleFormat.ddc,
-  );
-
-  tearDownAll(provider.dispose);
-
-  group('Frontend Server', () {
-    runTests(provider: provider, contextFactory: FrontendServerTestContext.new);
-  });
-
-  group('Build Daemon', () {
-    runTests(provider: provider, contextFactory: BuildDaemonTestContext.new);
-  });
-}
 
 void runTests({
   required TestSdkConfigurationProvider provider,
@@ -49,7 +25,7 @@ void runTests({
 
   Future<void> makeEditsAndRecompile(List<Edit> edits) async {
     await context.makeEdits(edits);
-    if (context is FrontendServerTestContext) {
+    if (context.usesFrontendServer) {
       await context.recompile(fullRestart: true);
     } else {
       await context.waitForSuccessfulBuild();
@@ -213,7 +189,7 @@ void runTests({
 
       final breakpointFuture = waitForBreakpoint();
 
-      if (context is FrontendServerTestContext) {
+      if (context.usesFrontendServer) {
         await context.recompile(fullRestart: false);
       }
 

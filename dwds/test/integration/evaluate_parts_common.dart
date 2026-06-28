@@ -11,11 +11,9 @@ import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:vm_service_interface/vm_service_interface.dart';
 
-import 'fixtures/build_daemon_context.dart';
-
 void testAll({
   required TestSdkConfigurationProvider provider,
-  TestContextFactory contextFactory = BuildDaemonTestContext.new,
+  required TestContextFactory contextFactory,
   IndexBaseMode indexBaseMode = IndexBaseMode.noBase,
   bool useDebuggerModuleNames = false,
 }) {
@@ -23,8 +21,7 @@ void testAll({
 
   final context = contextFactory(testParts, provider);
 
-  if (context is BuildDaemonTestContext &&
-      indexBaseMode == IndexBaseMode.base) {
+  if (context.usesBuildDaemon && indexBaseMode == IndexBaseMode.base) {
     throw StateError(
       'build daemon scenario does not support non-empty base in index file',
     );

@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:dwds/testing/context.dart';
 import 'package:dwds/testing/project.dart';
 import 'package:dwds/testing/utilities.dart';
 import 'package:dwds_test_common/logging.dart';
@@ -9,11 +10,12 @@ import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../fixtures/build_daemon_context.dart';
-
-void testAll({required TestSdkConfigurationProvider provider}) {
+void testAll({
+  required TestSdkConfigurationProvider provider,
+  required TestContextFactory contextFactory,
+}) {
   group('Asset handler', () {
-    final context = BuildDaemonTestContext(TestProject.test, provider);
+    final context = contextFactory(TestProject.test, provider);
 
     setUpAll(() async {
       setCurrentLogWriter(debug: provider.verbose);

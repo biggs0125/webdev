@@ -10,6 +10,7 @@ import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
 import 'debug_service_common.dart';
+import 'fixtures/build_daemon_context.dart';
 
 void main() {
   // Enable verbose logging for debugging.
@@ -17,5 +18,5 @@ void main() {
   final provider = TestSdkConfigurationProvider(verbose: debug);
   tearDownAll(provider.dispose);
 
-  testAll(provider: provider);
+  testAll(provider: provider, contextFactory: BuildDaemonTestContext.new);
 }
