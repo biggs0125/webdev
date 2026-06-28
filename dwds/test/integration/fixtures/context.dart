@@ -9,10 +9,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:build_daemon/client.dart';
-import 'package:build_daemon/data/build_status.dart';
+import 'package:build_daemon/constants.dart';
+import 'package:build_daemon/data/build_status.dart' as daemon;
 import 'package:build_daemon/data/build_target.dart';
+import 'package:build_daemon/data/server_log.dart';
 import 'package:dwds/asset_reader.dart';
 import 'package:dwds/dart_web_debug_service.dart';
+import 'package:dwds/data/build_result.dart';
 import 'package:dwds/src/connections/app_connection.dart';
 import 'package:dwds/src/connections/debug_connection.dart';
 import 'package:dwds/src/debugging/webkit_debugger.dart';
@@ -248,7 +251,7 @@ class TestContext {
 
       ExpressionCompiler? expressionCompiler;
       AssetReader assetReader;
-      Stream<BuildResults> buildResults;
+      Stream<daemon.BuildResults> buildResults;
       LoadStrategy loadStrategy;
       var basePath = '';
       var filePathToServe = project.filePathToServe;
@@ -449,7 +452,7 @@ class TestContext {
                 '${testSettings.moduleFormat.name}.',
               ),
             };
-            buildResults = const Stream<BuildResults>.empty();
+            buildResults = const Stream<daemon.BuildResults>.empty();
           }
           break;
         case CompilationMode.buildDaemonAndFrontendServer:
@@ -551,7 +554,7 @@ class TestContext {
                 'Server + build_runner ${testSettings.moduleFormat.name}.',
               ),
             };
-            buildResults = const Stream<BuildResults>.empty();
+            buildResults = const Stream<daemon.BuildResults>.empty();
           }
           break;
       }
@@ -598,6 +601,25 @@ class TestContext {
       final appConnectionCompleter = Completer<void>();
       final connection = ChromeConnection('localhost', debugPort);
 
+      final filteredBuildResults = buildResults.asyncMap<BuildResult>((
+        results,
+      ) {
+        final result = results.results.firstWhere(
+          (result) => result.target == project.directoryToServe,
+        );
+        switch (result.status) {
+          case daemon.BuildStatus.started:
+            return BuildResult(status: BuildStatus.started);
+          case daemon.BuildStatus.failed:
+            return BuildResult(status: BuildStatus.failed);
+          case daemon.BuildStatus.succeeded:
+            return BuildResult(status: BuildStatus.succeeded);
+          default:
+            break;
+        }
+        throw StateError('Unexpected Daemon build result: $result');
+      });
+
       // TODO(srujzs): In the case of the frontend server, it doesn't make sense
       // that we initialize a new HTTP server instead of reusing the one in
       // `TestAssetServer`. We should instead use that one to align with Flutter
@@ -611,8 +633,7 @@ class TestContext {
         assetHandler: assetHandler,
         assetReader: assetReader,
         strategy: loadStrategy,
-        target: project.directoryToServe,
-        buildResults: buildResults,
+        buildResults: filteredBuildResults,
         chromeConnection: () async => connection,
         httpServer: httpServer,
       );
@@ -866,8 +887,9 @@ class TestContext {
     // Wait for the build until the timeout is reached:
     await daemonClient.buildResults
         .firstWhere(
-          (BuildResults results) => results.results.any(
-            (BuildResult result) => result.status == BuildStatus.succeeded,
+          (daemon.BuildResults results) => results.results.any(
+            (daemon.BuildResult result) =>
+                result.status == daemon.BuildStatus.succeeded,
           ),
         )
         .timeout(timeout ?? const Duration(seconds: 60));
@@ -938,3 +960,31 @@ class TestContext {
 }
 
 typedef Edit = ({String file, String originalString, String newString});
+
+
+
+/// Connects to the `build_runner` daemon.
+Future<BuildDaemonClient> connectClient(
+  String dartPath,
+  String workingDirectory,
+  List<String> options,
+  void Function(ServerLog) logHandler,
+) => BuildDaemonClient.connect(workingDirectory, [
+  dartPath,
+  'run',
+  'build_runner',
+  'daemon',
+  ...options,
+], logHandler: logHandler);
+
+/// Returns the port of the daemon asset server.
+int daemonPort(String workingDirectory) {
+  final portFile = File(_assetServerPortFilePath(workingDirectory));
+  if (!portFile.existsSync()) {
+    throw Exception('Unable to read daemon asset port file.');
+  }
+  return int.parse(portFile.readAsStringSync());
+}
+
+String _assetServerPortFilePath(String workingDirectory) =>
+    '${daemonWorkspace(workingDirectory)}/.asset_server_port';
