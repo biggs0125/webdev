@@ -7,13 +7,13 @@ import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../fixtures/context.dart';
+import '../fixtures/build_daemon_context.dart';
 import '../fixtures/project.dart';
 import '../fixtures/utilities.dart';
 
 void testAll({required TestSdkConfigurationProvider provider}) {
   group('Asset handler', () {
-    final context = TestContext(TestProject.test, provider);
+    final context = BuildDaemonTestContext(TestProject.test, provider);
 
     setUpAll(() async {
       setCurrentLogWriter(debug: provider.verbose);

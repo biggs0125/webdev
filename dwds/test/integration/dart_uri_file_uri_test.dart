@@ -11,7 +11,8 @@ import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
-import 'fixtures/context.dart';
+import 'fixtures/build_daemon_context.dart';
+import 'fixtures/frontend_server_context.dart';
 import 'fixtures/project.dart';
 import 'fixtures/utilities.dart';
 
@@ -26,32 +27,36 @@ void main() {
   final testProject = TestProject.test;
   final testPackageProject = TestProject.testPackage();
 
-  final context = TestContext(testPackageProject, provider);
+  final contexts = {
+    'BuildDaemon': BuildDaemonTestContext.new,
+    'FrontendServer': FrontendServerTestContext.new,
+  };
 
-  for (final compilationMode in CompilationMode.values.where(
-    (mode) => !mode.usesDdcModulesOnly,
-  )) {
-    group('$compilationMode |', () {
+  for (final entry in contexts.entries) {
+    final name = entry.key;
+    final contextFactory = entry.value;
+
+    group('$name |', () {
+      final context = contextFactory(testPackageProject, provider);
       for (final useDebuggerModuleNames in [false, true]) {
         group('Debugger module names: $useDebuggerModuleNames |', () {
-          final appServerPath = compilationMode.usesFrontendServer
+          final appServerPath = context.usesFrontendServer
               ? 'web/main.dart'
               : 'main.dart';
 
           final serverPath =
-              compilationMode.usesFrontendServer && useDebuggerModuleNames
+              context.usesFrontendServer && useDebuggerModuleNames
               ? 'packages/${testPackageProject.packageDirectory}/lib/test_library.dart'
               : 'packages/${testPackageProject.packageName}/test_library.dart';
 
           final anotherServerPath =
-              compilationMode.usesFrontendServer && useDebuggerModuleNames
+              context.usesFrontendServer && useDebuggerModuleNames
               ? 'packages/${testProject.packageDirectory}/lib/library.dart'
               : 'packages/${testProject.packageName}/library.dart';
 
           setUpAll(() async {
             await context.setUp(
               testSettings: TestSettings(
-                compilationMode: compilationMode,
                 useDebuggerModuleNames: useDebuggerModuleNames,
               ),
             );

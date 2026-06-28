@@ -11,7 +11,8 @@ import 'package:dwds/src/services/expression_compiler.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
-import '../fixtures/context.dart';
+import '../fixtures/build_daemon_context.dart';
+import '../fixtures/frontend_server_context.dart';
 import 'common/record_inspection_common.dart';
 
 void main() {
@@ -20,7 +21,7 @@ void main() {
   final canaryFeatures = true;
 
   group('canary: true | Frontend Server |', () {
-    final compilationMode = CompilationMode.frontendServer;
+    final contextFactory = FrontendServerTestContext.new;
     final provider = TestSdkConfigurationProvider(
       verbose: debug,
       canaryFeatures: canaryFeatures,
@@ -29,13 +30,13 @@ void main() {
     tearDownAll(provider.dispose);
     runTests(
       provider: provider,
-      compilationMode: compilationMode,
+      contextFactory: contextFactory,
       canaryFeatures: canaryFeatures,
     );
   });
 
   group('canary: true | Build Daemon |', () {
-    final compilationMode = CompilationMode.buildDaemon;
+    final contextFactory = BuildDaemonTestContext.new;
     final provider = TestSdkConfigurationProvider(
       verbose: debug,
       canaryFeatures: canaryFeatures,
@@ -44,7 +45,7 @@ void main() {
     tearDownAll(provider.dispose);
     runTests(
       provider: provider,
-      compilationMode: compilationMode,
+      contextFactory: contextFactory,
       canaryFeatures: canaryFeatures,
     );
   });

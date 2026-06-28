@@ -11,7 +11,7 @@ import 'package:dwds/expression_compiler.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
-import 'fixtures/context.dart';
+import 'fixtures/frontend_server_context.dart';
 import 'hot_reload_breakpoints_common.dart';
 
 void main() {
@@ -26,9 +26,6 @@ void main() {
   tearDownAll(provider.dispose);
 
   group('Frontend Server', () {
-    runTests(
-      provider: provider,
-      compilationMode: CompilationMode.frontendServer,
-    );
+    runTests(provider: provider, contextFactory: FrontendServerTestContext.new);
   });
 }

@@ -12,32 +12,32 @@ import 'package:vm_service/vm_service.dart';
 import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart';
 
 import '../../fixtures/context.dart';
+import '../../fixtures/frontend_server_context.dart';
 import '../../fixtures/project.dart';
 import '../../fixtures/utilities.dart';
 import 'test_inspector.dart';
 
 void runTypeSystemVerificationTests({
   required TestSdkConfigurationProvider provider,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
   required bool canaryFeatures,
 }) {
   final project = TestProject.testScopes;
+  final context = contextFactory(project, provider);
 
-  group('$compilationMode |', () {
-    final context = TestContext(project, provider);
+  group('${context.runtimeType} |', () {
     late ChromeAppInspector inspector;
 
     setUpAll(() async {
       setCurrentLogWriter(debug: provider.verbose);
       await context.setUp(
         testSettings: TestSettings(
-          compilationMode: compilationMode,
           verboseCompiler: provider.verbose,
           canaryFeatures: canaryFeatures,
+          moduleFormat: provider.ddcModuleFormat,
         ),
       );
-      final chromeProxyService = context.service;
-      inspector = chromeProxyService.inspector;
+      inspector = context.service.inspector;
     });
 
     tearDownAll(() async {
@@ -46,19 +46,15 @@ void runTypeSystemVerificationTests({
 
     final url = 'org-dartlang-app:///example/scopes/main.dart';
 
-    String libraryName(CompilationMode compilationMode) =>
-        compilationMode == CompilationMode.frontendServer
+    String libraryName() => context is FrontendServerTestContext
         ? 'example/scopes/main.dart'
         : 'example/scopes/main';
 
-    String libraryVariableTypeExpression(
-      String variable,
-      CompilationMode compilationMode,
-    ) =>
+    String libraryVariableTypeExpression(String variable) =>
         '''
             (function() {
               var dart = ${globalToolConfiguration.loadStrategy.loadModuleSnippet}('dart_sdk').dart;
-              var libraryName = '${libraryName(compilationMode)}';
+              var libraryName = '${libraryName()}';
               var library = dart.getModuleLibraries(libraryName)['$url'];
               var x = library['$variable'];
               return dart.getReifiedType(x);
@@ -70,7 +66,7 @@ void runTypeSystemVerificationTests({
 
       test('uses correct type system', () async {
         final remoteObject = await inspector.jsEvaluate(
-          libraryVariableTypeExpression('libraryPublicFinal', compilationMode),
+          libraryVariableTypeExpression('libraryPublicFinal'),
         );
         expect(remoteObject.json['className'], 'dart_rti.Rti.new');
       });
@@ -80,20 +76,19 @@ void runTypeSystemVerificationTests({
 
 void runTests({
   required TestSdkConfigurationProvider provider,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
   required bool canaryFeatures,
 }) {
   final project = TestProject.testScopes;
-  final context = TestContext(project, provider);
+  final context = contextFactory(project, provider);
 
   late ChromeAppInspector inspector;
 
-  group('$compilationMode |', () {
+  group('${context.runtimeType} |', () {
     setUpAll(() async {
       setCurrentLogWriter(debug: provider.verbose);
       await context.setUp(
         testSettings: TestSettings(
-          compilationMode: compilationMode,
           verboseCompiler: provider.verbose,
           canaryFeatures: canaryFeatures,
           moduleFormat: provider.ddcModuleFormat,

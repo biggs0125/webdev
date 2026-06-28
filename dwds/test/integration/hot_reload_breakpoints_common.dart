@@ -15,10 +15,10 @@ import 'fixtures/utilities.dart';
 
 void runTests({
   required TestSdkConfigurationProvider provider,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
 }) {
   final project = TestProject.testHotReloadBreakpoints;
-  final context = TestContext(project, provider);
+  final context = contextFactory(project, provider);
   final mainFile = project.dartEntryFileName;
   final callLogMarker = 'callLog';
   final capturedStringMarker = 'capturedString';
@@ -37,7 +37,6 @@ void runTests({
       await context.setUp(
         testSettings: TestSettings(
           enableExpressionEvaluation: true,
-          compilationMode: compilationMode,
           moduleFormat: provider.ddcModuleFormat,
           canaryFeatures: provider.canaryFeatures,
         ),
@@ -521,7 +520,6 @@ void runTests({
       await context.setUp(
         testSettings: TestSettings(
           enableExpressionEvaluation: true,
-          compilationMode: compilationMode,
           moduleFormat: provider.ddcModuleFormat,
           canaryFeatures: provider.canaryFeatures,
         ),

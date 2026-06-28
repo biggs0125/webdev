@@ -14,11 +14,11 @@ import 'test_inspector.dart';
 
 void runTests({
   required TestSdkConfigurationProvider provider,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
   required bool canaryFeatures,
 }) {
   final project = TestProject.testPackage();
-  final context = TestContext(project, provider);
+  final context = contextFactory(project, provider);
 
   late VmService service;
   late Stream<Event> stream;
@@ -58,12 +58,11 @@ void runTests({
     count: count,
   );
 
-  group('$compilationMode |', () {
+  group('${context.runtimeType} |', () {
     setUpAll(() async {
       setCurrentLogWriter(debug: provider.verbose);
       await context.setUp(
         testSettings: TestSettings(
-          compilationMode: compilationMode,
           enableExpressionEvaluation: true,
           verboseCompiler: provider.verbose,
           canaryFeatures: canaryFeatures,

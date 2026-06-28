@@ -11,7 +11,8 @@ import 'package:dwds/expression_compiler.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
-import '../fixtures/context.dart';
+import '../fixtures/build_daemon_context.dart';
+import '../fixtures/frontend_server_context.dart';
 import 'common/patterns_inspection_common.dart';
 
 void main() {
@@ -20,7 +21,7 @@ void main() {
 
   group('canary: false | Build Daemon |', () {
     final canaryFeatures = false;
-    final compilationMode = CompilationMode.buildDaemon;
+    final contextFactory = BuildDaemonTestContext.new;
     final provider = TestSdkConfigurationProvider(
       verbose: debug,
       canaryFeatures: canaryFeatures,
@@ -30,14 +31,14 @@ void main() {
 
     runTests(
       provider: provider,
-      compilationMode: compilationMode,
+      contextFactory: contextFactory,
       canaryFeatures: canaryFeatures,
     );
   });
 
   group('canary: true | Build Daemon |', () {
     final canaryFeatures = true;
-    final compilationMode = CompilationMode.buildDaemon;
+    final contextFactory = BuildDaemonTestContext.new;
     final provider = TestSdkConfigurationProvider(
       verbose: debug,
       canaryFeatures: canaryFeatures,
@@ -47,14 +48,14 @@ void main() {
 
     runTests(
       provider: provider,
-      compilationMode: compilationMode,
+      contextFactory: contextFactory,
       canaryFeatures: canaryFeatures,
     );
   });
 
   group('canary: false | Frontend Server |', () {
     final canaryFeatures = false;
-    final compilationMode = CompilationMode.frontendServer;
+    final contextFactory = FrontendServerTestContext.new;
     final provider = TestSdkConfigurationProvider(
       verbose: debug,
       canaryFeatures: canaryFeatures,
@@ -64,14 +65,14 @@ void main() {
 
     runTests(
       provider: provider,
-      compilationMode: compilationMode,
+      contextFactory: contextFactory,
       canaryFeatures: canaryFeatures,
     );
   });
 
   group('canary: true | Frontend Server |', () {
     final canaryFeatures = true;
-    final compilationMode = CompilationMode.frontendServer;
+    final contextFactory = FrontendServerTestContext.new;
     final provider = TestSdkConfigurationProvider(
       verbose: debug,
       canaryFeatures: canaryFeatures,
@@ -81,7 +82,7 @@ void main() {
 
     runTests(
       provider: provider,
-      compilationMode: compilationMode,
+      contextFactory: contextFactory,
       canaryFeatures: canaryFeatures,
     );
   });

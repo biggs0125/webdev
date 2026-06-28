@@ -11,6 +11,7 @@ import 'package:vm_service/vm_service.dart';
 // ignore: deprecated_member_use
 import 'package:webdriver/io.dart';
 
+import 'fixtures/build_daemon_context.dart';
 import 'fixtures/context.dart';
 import 'fixtures/project.dart';
 import 'fixtures/utilities.dart';
@@ -29,7 +30,7 @@ TypeMatcher<Event> _hasKind(String kind) =>
     isA<Event>().having((Event e) => e.kind, 'kind', kind);
 
 void testAll({required TestSdkConfigurationProvider provider}) {
-  final context = TestContext(TestProject.test, provider);
+  final context = BuildDaemonTestContext(TestProject.test, provider);
 
   for (final serveFromDds in [true, false]) {
     group('Injected client with DevTools served from '

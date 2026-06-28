@@ -18,10 +18,10 @@ const newString = 'Bonjour le monde!';
 
 void runTests({
   required TestSdkConfigurationProvider provider,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
 }) {
   final project = TestProject.testHotReload;
-  final context = TestContext(project, provider);
+  final context = contextFactory(project, provider);
 
   Future<void> recompile() async {
     await context.recompile(fullRestart: false);
@@ -71,7 +71,6 @@ void runTests({
       await context.setUp(
         testSettings: TestSettings(
           enableExpressionEvaluation: true,
-          compilationMode: compilationMode,
           moduleFormat: provider.ddcModuleFormat,
           canaryFeatures: provider.canaryFeatures,
         ),

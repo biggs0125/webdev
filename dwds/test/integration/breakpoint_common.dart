@@ -14,17 +14,16 @@ import 'fixtures/utilities.dart';
 
 void testBreakpoint({
   required TestSdkConfigurationProvider provider,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
   bool verboseCompiler = false,
 }) {
-  final context = TestContext(TestProject.testPackage(), provider);
+  final context = contextFactory(TestProject.testPackage(), provider);
 
   group('shared context', () {
     setUpAll(() async {
       setCurrentLogWriter(debug: provider.verbose);
       await context.setUp(
         testSettings: TestSettings(
-          compilationMode: compilationMode,
           verboseCompiler: verboseCompiler,
           canaryFeatures: provider.canaryFeatures,
           moduleFormat: provider.ddcModuleFormat,

@@ -12,7 +12,9 @@ import 'package:vm_service/vm_service.dart';
 import 'package:vm_service_interface/vm_service_interface.dart';
 import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart';
 
+import 'fixtures/build_daemon_context.dart';
 import 'fixtures/context.dart';
+import 'fixtures/frontend_server_context.dart';
 import 'fixtures/project.dart';
 import 'fixtures/utilities.dart';
 
@@ -28,29 +30,26 @@ void main() {
   tearDownAll(provider.dispose);
 
   group('Frontend Server', () {
-    runTests(
-      provider: provider,
-      compilationMode: CompilationMode.frontendServer,
-    );
+    runTests(provider: provider, contextFactory: FrontendServerTestContext.new);
   });
 
   group('Build Daemon', () {
-    runTests(provider: provider, compilationMode: CompilationMode.buildDaemon);
+    runTests(provider: provider, contextFactory: BuildDaemonTestContext.new);
   });
 }
 
 void runTests({
   required TestSdkConfigurationProvider provider,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
 }) {
   final project = TestProject.testHotRestartBreakpoints;
-  final context = TestContext(project, provider);
+  final context = contextFactory(project, provider);
   final mainFile = project.dartEntryFileName;
   final callLogMarker = 'callLog';
 
   Future<void> makeEditsAndRecompile(List<Edit> edits) async {
     await context.makeEdits(edits);
-    if (compilationMode == CompilationMode.frontendServer) {
+    if (context is FrontendServerTestContext) {
       await context.recompile(fullRestart: true);
     } else {
       await context.waitForSuccessfulBuild();
@@ -70,7 +69,6 @@ void runTests({
       await context.setUp(
         testSettings: TestSettings(
           enableExpressionEvaluation: true,
-          compilationMode: compilationMode,
           moduleFormat: provider.ddcModuleFormat,
           canaryFeatures: provider.canaryFeatures,
         ),
@@ -215,7 +213,7 @@ void runTests({
 
       final breakpointFuture = waitForBreakpoint();
 
-      if (compilationMode == CompilationMode.frontendServer) {
+      if (context is FrontendServerTestContext) {
         await context.recompile(fullRestart: false);
       }
 

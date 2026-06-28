@@ -12,8 +12,10 @@ import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
+import 'fixtures/build_daemon_context.dart';
 import 'fixtures/context.dart';
 import 'fixtures/fakes.dart';
+import 'fixtures/frontend_server_context.dart';
 import 'fixtures/project.dart';
 import 'fixtures/utilities.dart';
 
@@ -23,7 +25,7 @@ void main() {
     final provider = TestSdkConfigurationProvider();
     tearDownAll(provider.dispose);
 
-    final context = TestContext(project, provider);
+    final context = BuildDaemonTestContext(project, provider);
 
     setUpAll(context.setUp);
     tearDownAll(context.tearDown);
@@ -137,16 +139,22 @@ void main() {
     );
     tearDownAll(provider.dispose);
 
-    final context = TestContext(project, provider);
+    final contexts = {
+      'BuildDaemon': BuildDaemonTestContext.new,
+      'FrontendServer': FrontendServerTestContext.new,
+    };
 
-    for (final compilationMode in CompilationMode.values.where(
-      (mode) => !mode.usesDdcModulesOnly,
-    )) {
-      group('compiled with ${compilationMode.name}', () {
+    for (final entry in contexts.entries) {
+      final name = entry.key;
+      final contextFactory = entry.value;
+
+      group('compiled with $name', () {
+        late final TestContext context;
+
         setUpAll(() async {
+          context = contextFactory(project, provider);
           await context.setUp(
             testSettings: TestSettings(
-              compilationMode: compilationMode,
               canaryFeatures: canaryFeatures,
               isFlutterApp: isFlutterApp,
               experiments: experiments,
@@ -154,7 +162,9 @@ void main() {
           );
         });
 
-        tearDownAll(context.tearDown);
+        tearDownAll(() async {
+          await context.tearDown();
+        });
 
         test('provides custom build settings', () {
           final loadStrategy = globalToolConfiguration.loadStrategy;

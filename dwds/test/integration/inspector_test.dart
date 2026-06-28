@@ -15,14 +15,14 @@ import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart';
 
-import 'fixtures/context.dart';
+import 'fixtures/build_daemon_context.dart';
 import 'fixtures/project.dart';
 
 void main() {
   final provider = TestSdkConfigurationProvider();
   tearDownAll(provider.dispose);
 
-  final context = TestContext(TestProject.testScopes, provider);
+  final context = BuildDaemonTestContext(TestProject.testScopes, provider);
 
   late ChromeAppInspector inspector;
 

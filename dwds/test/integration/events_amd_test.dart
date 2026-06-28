@@ -15,7 +15,8 @@ import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
 import 'events_common.dart';
-import 'fixtures/context.dart';
+import 'fixtures/build_daemon_context.dart';
+import 'fixtures/frontend_server_context.dart';
 
 void main() {
   final provider = TestSdkConfigurationProvider();
@@ -81,14 +82,14 @@ void main() {
   group('Frontend Server', () {
     testWithDwds(
       provider: provider,
-      compilationMode: CompilationMode.frontendServer,
+      contextFactory: FrontendServerTestContext.new,
     );
   });
 
   group('Build Daemon', () {
     testWithDwds(
       provider: provider,
-      compilationMode: CompilationMode.buildDaemon,
+      contextFactory: BuildDaemonTestContext.new,
     );
   });
 }

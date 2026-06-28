@@ -11,6 +11,7 @@ import 'package:dwds_test_common/logging.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
+
 import '../../fixtures/context.dart';
 import '../../fixtures/project.dart';
 import '../../fixtures/utilities.dart';
@@ -18,10 +19,10 @@ import '../common/test_inspector.dart';
 
 void runTests({
   required TestSdkConfigurationProvider provider,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
   required bool canaryFeatures,
 }) {
-  final context = TestContext(TestProject.testExperiment, provider);
+  final context = contextFactory(TestProject.testExperiment, provider);
   final testInspector = TestInspector(context);
 
   late VmService service;
@@ -43,12 +44,11 @@ void runTests({
   Future<Obj> getObject(String instanceId) =>
       service.getObject(isolateId, instanceId);
 
-  group('$compilationMode |', () {
+  group('${context.runtimeType} |', () {
     setUpAll(() async {
       setCurrentLogWriter(debug: provider.verbose);
       await context.setUp(
         testSettings: TestSettings(
-          compilationMode: compilationMode,
           enableExpressionEvaluation: true,
           verboseCompiler: provider.verbose,
           experiments: ['dot-shorthands'],

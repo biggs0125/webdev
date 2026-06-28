@@ -15,10 +15,10 @@ import 'test_inspector.dart';
 
 void runTests({
   required TestSdkConfigurationProvider provider,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
   required bool canaryFeatures,
 }) {
-  final context = TestContext(TestProject.testDotShorthands, provider);
+  final context = contextFactory(TestProject.testDotShorthands, provider);
   final testInspector = TestInspector(context);
 
   late VmService service;
@@ -40,12 +40,11 @@ void runTests({
   Future<InstanceRef> getInstanceRef(int frame, String expression) =>
       testInspector.getInstanceRef(isolateId, frame, expression);
 
-  group('$compilationMode | dot shorthands:', () {
+  group('${context.runtimeType} | dot shorthands:', () {
     setUp(() async {
       setCurrentLogWriter(debug: provider.verbose);
       await context.setUp(
         testSettings: TestSettings(
-          compilationMode: compilationMode,
           enableExpressionEvaluation: true,
           verboseCompiler: provider.verbose,
           experiments: ['dot-shorthands'],

@@ -16,7 +16,9 @@ import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 
+import '../fixtures/build_daemon_context.dart';
 import '../fixtures/context.dart';
+import '../fixtures/frontend_server_context.dart';
 import '../fixtures/project.dart';
 import '../fixtures/utilities.dart';
 
@@ -29,13 +31,13 @@ const constantFailureString = 'ConstantEqualityFailure';
 void runTests({
   required TestSdkConfigurationProvider provider,
   required ModuleFormat moduleFormat,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
   required bool canaryFeatures,
 }) {
   tearDownAll(provider.dispose);
 
   final testHotRestart2 = TestProject.testHotRestart2;
-  final context = TestContext(testHotRestart2, provider);
+  final context = contextFactory(testHotRestart2, provider);
 
   Future<void> makeEditAndRecompile() async {
     await context.makeEdits([
@@ -45,10 +47,10 @@ void runTests({
         newString: newString,
       ),
     ]);
-    if (compilationMode == CompilationMode.frontendServer) {
+    if (context is FrontendServerTestContext) {
       await context.recompile(fullRestart: true);
     } else {
-      assert(compilationMode == CompilationMode.buildDaemon);
+      assert(context is BuildDaemonTestContext);
       await context.waitForSuccessfulBuild(propagateToBrowser: true);
     }
   }
@@ -80,7 +82,6 @@ void runTests({
       await context.setUp(
         testSettings: TestSettings(
           enableExpressionEvaluation: true,
-          compilationMode: compilationMode,
           moduleFormat: provider.ddcModuleFormat,
           canaryFeatures: provider.canaryFeatures,
         ),
@@ -149,7 +150,6 @@ void runTests({
           await context.setUp(
             testSettings: TestSettings(
               reloadConfiguration: ReloadConfiguration.hotRestart,
-              compilationMode: compilationMode,
               moduleFormat: provider.ddcModuleFormat,
               canaryFeatures: provider.canaryFeatures,
             ),
@@ -175,7 +175,6 @@ void runTests({
           await context.setUp(
             testSettings: TestSettings(
               reloadConfiguration: ReloadConfiguration.hotRestart,
-              compilationMode: compilationMode,
               moduleFormat: provider.ddcModuleFormat,
               canaryFeatures: provider.canaryFeatures,
             ),
@@ -199,7 +198,7 @@ void runTests({
       });
     },
     // `BuildResult`s are only ever emitted when using the build daemon.
-    skip: compilationMode == CompilationMode.buildDaemon ? null : true,
+    skip: context is BuildDaemonTestContext ? null : true,
     timeout: const Timeout.factor(2),
   );
 }

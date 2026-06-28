@@ -30,11 +30,11 @@ import '../fixtures/utilities.dart';
 void runTests({
   required TestSdkConfigurationProvider provider,
   required ModuleFormat moduleFormat,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
   required bool canaryFeatures,
 }) {
   final project = TestProject.test;
-  final context = TestContext(project, provider);
+  final context = contextFactory(project, provider);
 
   group('shared context', () {
     setUpAll(() async {
@@ -45,7 +45,6 @@ void runTests({
           verboseCompiler: false,
           moduleFormat: provider.ddcModuleFormat,
           canaryFeatures: canaryFeatures,
-          compilationMode: compilationMode,
         ),
       );
     });
@@ -1678,9 +1677,8 @@ void runTests({
       });
 
       test('break on exceptions with setIsolatePauseMode', () async {
-        final oldPauseMode = (await service.getIsolate(
-          isolateId!,
-        )).exceptionPauseMode;
+        final oldPauseMode = (await service.getIsolate(isolateId!))
+            .exceptionPauseMode;
         await service.setIsolatePauseMode(
           isolateId!,
           exceptionPauseMode: ExceptionPauseMode.kAll,
@@ -2015,12 +2013,14 @@ void runTests({
         final vm = await service.getVM();
         final isolateId = vm.isolates!.first.id!;
 
-        final resolvedUris = await service
-            .lookupResolvedPackageUris(isolateId, [
-              'package:does/not/exist.dart',
-              'dart:does_not_exist',
-              'file:///does_not_exist.dart',
-            ]);
+        final resolvedUris = await service.lookupResolvedPackageUris(
+          isolateId,
+          [
+            'package:does/not/exist.dart',
+            'dart:does_not_exist',
+            'file:///does_not_exist.dart',
+          ],
+        );
         expect(resolvedUris.uris, [null, null, null]);
       },
     );
@@ -2516,9 +2516,8 @@ void runTests({
             predicate(
               (Event event) =>
                   event.kind == EventKind.kWriteEvent &&
-                  String.fromCharCodes(
-                    base64.decode(event.bytes!),
-                  ).contains('hello'),
+                  String.fromCharCodes(base64.decode(event.bytes!))
+                      .contains('hello'),
             ),
           ),
         );
@@ -2534,9 +2533,8 @@ void runTests({
             predicate(
               (Event event) =>
                   event.kind == EventKind.kWriteEvent &&
-                  String.fromCharCodes(
-                    base64.decode(event.bytes!),
-                  ).contains('Error'),
+                  String.fromCharCodes(base64.decode(event.bytes!))
+                      .contains('Error'),
             ),
           ),
         );
@@ -2552,9 +2550,8 @@ void runTests({
             predicate(
               (Event event) =>
                   event.kind == EventKind.kWriteEvent &&
-                  String.fromCharCodes(
-                    base64.decode(event.bytes!),
-                  ).contains('main.dart'),
+                  String.fromCharCodes(base64.decode(event.bytes!))
+                      .contains('main.dart'),
             ),
           ),
         );

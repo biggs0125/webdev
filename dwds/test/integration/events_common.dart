@@ -14,14 +14,15 @@ import 'package:vm_service_interface/vm_service_interface.dart';
 import 'package:webdriver/async_core.dart';
 
 import 'fixtures/context.dart';
+import 'fixtures/frontend_server_context.dart';
 import 'fixtures/project.dart';
 import 'fixtures/utilities.dart';
 
 void testWithDwds({
   required TestSdkConfigurationProvider provider,
-  required CompilationMode compilationMode,
+  required TestContextFactory contextFactory,
 }) {
-  final context = TestContext(TestProject.test, provider);
+  final context = contextFactory(TestProject.test, provider);
 
   group(
     'with dwds',
@@ -73,7 +74,7 @@ void testWithDwds({
           pipe(eventStream, timeout: const Timeout.factor(5)),
           emitsThrough(
             matchesEvent(DwdsEventKind.compilerUpdateDependencies, {
-              if (compilationMode == CompilationMode.frontendServer)
+              if (context is FrontendServerTestContext)
                 'entrypoint': 'example/hello_world/main_module.bootstrap.js'
               else
                 'entrypoint': 'hello_world/main.dart.bootstrap.js',
@@ -83,7 +84,6 @@ void testWithDwds({
         );
         await context.setUp(
           testSettings: TestSettings(
-            compilationMode: compilationMode,
             enableExpressionEvaluation: true,
             moduleFormat: provider.ddcModuleFormat,
             verboseCompiler: provider.verbose,

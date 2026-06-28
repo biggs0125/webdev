@@ -34,12 +34,7 @@ class TestServer {
   final Stream<BuildResult> buildResults;
   final AssetReader assetReader;
 
-  TestServer._(
-    this._server,
-    this.dwds,
-    this.buildResults,
-    this.assetReader,
-  );
+  TestServer._(this._server, this.dwds, this.buildResults, this.assetReader);
 
   String get host => _server.address.host;
   int get port => _server.port;
@@ -93,12 +88,7 @@ class TestServer {
       },
     );
 
-    return TestServer._(
-      server,
-      dwds,
-      buildResults,
-      assetReader,
-    );
+    return TestServer._(server, dwds, buildResults, assetReader);
   }
 
   /// [Middleware] that logs all requests, inspired by [logRequests].

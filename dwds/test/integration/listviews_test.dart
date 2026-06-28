@@ -8,14 +8,14 @@ library;
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
-import 'fixtures/context.dart';
+import 'fixtures/build_daemon_context.dart';
 import 'fixtures/project.dart';
 
 void main() {
   final provider = TestSdkConfigurationProvider();
   tearDownAll(provider.dispose);
 
-  final context = TestContext(TestProject.test, provider);
+  final context = BuildDaemonTestContext(TestProject.test, provider);
 
   setUpAll(() async {
     await context.setUp();

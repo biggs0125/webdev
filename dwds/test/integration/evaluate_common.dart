@@ -16,27 +16,28 @@ import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart';
 
+import 'fixtures/build_daemon_context.dart';
 import 'fixtures/context.dart';
 import 'fixtures/project.dart';
 import 'fixtures/utilities.dart';
 
 void testAll({
   required TestSdkConfigurationProvider provider,
-  CompilationMode compilationMode = CompilationMode.buildDaemon,
+  TestContextFactory contextFactory = BuildDaemonTestContext.new,
   IndexBaseMode indexBaseMode = IndexBaseMode.noBase,
   bool useDebuggerModuleNames = false,
 }) {
-  if (compilationMode == CompilationMode.buildDaemon &&
+  final testProject = TestProject.test;
+  final testPackageProject = TestProject.testPackage(baseMode: indexBaseMode);
+
+  final context = contextFactory(testPackageProject, provider);
+
+  if (context is BuildDaemonTestContext &&
       indexBaseMode == IndexBaseMode.base) {
     throw StateError(
       'build daemon scenario does not support non-empty base in index file',
     );
   }
-
-  final testProject = TestProject.test;
-  final testPackageProject = TestProject.testPackage(baseMode: indexBaseMode);
-
-  final context = TestContext(testPackageProject, provider);
 
   Future<void> onBp(
     Stream<Event> stream,
@@ -74,7 +75,6 @@ void testAll({
       setCurrentLogWriter(debug: provider.verbose);
       await context.setUp(
         testSettings: TestSettings(
-          compilationMode: compilationMode,
           moduleFormat: provider.ddcModuleFormat,
           enableExpressionEvaluation: true,
           useDebuggerModuleNames: useDebuggerModuleNames,
@@ -825,7 +825,6 @@ void testAll({
       setCurrentLogWriter(debug: provider.verbose);
       await context.setUp(
         testSettings: TestSettings(
-          compilationMode: compilationMode,
           moduleFormat: provider.ddcModuleFormat,
           enableExpressionEvaluation: false,
           verboseCompiler: provider.verbose,

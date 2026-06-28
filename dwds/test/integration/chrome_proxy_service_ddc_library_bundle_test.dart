@@ -12,7 +12,8 @@ import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 
 import 'common/chrome_proxy_service_common.dart';
-import 'fixtures/context.dart';
+import 'fixtures/build_daemon_context.dart';
+import 'fixtures/frontend_server_context.dart';
 
 void main() {
   // Enable verbose logging for debugging.
@@ -26,13 +27,13 @@ void main() {
       canaryFeatures: canaryFeatures,
       ddcModuleFormat: moduleFormat,
     );
-    final compilationMode = CompilationMode.frontendServer;
+    final contextFactory = FrontendServerTestContext.new;
     tearDownAll(provider.dispose);
 
     runTests(
       provider: provider,
       moduleFormat: moduleFormat,
-      compilationMode: compilationMode,
+      contextFactory: contextFactory,
       canaryFeatures: canaryFeatures,
     );
   });
@@ -43,13 +44,13 @@ void main() {
       canaryFeatures: canaryFeatures,
       ddcModuleFormat: moduleFormat,
     );
-    final compilationMode = CompilationMode.buildDaemon;
+    final contextFactory = BuildDaemonTestContext.new;
     tearDownAll(provider.dispose);
 
     runTests(
       provider: provider,
       moduleFormat: moduleFormat,
-      compilationMode: compilationMode,
+      contextFactory: contextFactory,
       canaryFeatures: canaryFeatures,
     );
   });

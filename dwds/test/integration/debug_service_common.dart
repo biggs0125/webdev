@@ -10,12 +10,12 @@ import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:vm_service/vm_service_io.dart';
 
-import 'fixtures/context.dart';
+import 'fixtures/build_daemon_context.dart';
 import 'fixtures/project.dart';
 import 'fixtures/utilities.dart';
 
 void testAll({required TestSdkConfigurationProvider provider}) {
-  final context = TestContext(TestProject.test, provider);
+  final context = BuildDaemonTestContext(TestProject.test, provider);
 
   setUpAll(() async {
     // Disable DDS as we're testing DWDS behavior.
@@ -47,9 +47,8 @@ void testAll({required TestSdkConfigurationProvider provider}) {
 
   test('Accepts connections with the auth token', () async {
     expect(
-      vmServiceConnectUri(
-        '${context.debugConnection.uri}/ws',
-      ).then((client) => client.dispose()),
+      vmServiceConnectUri('${context.debugConnection.uri}/ws')
+          .then((client) => client.dispose()),
       completes,
     );
   });
@@ -73,9 +72,8 @@ void testAll({required TestSdkConfigurationProvider provider}) {
     // However, once DDS is disconnected, additional clients can connect again.
     await fakeDds.dispose();
     expect(
-      vmServiceConnectUri(
-        '${context.debugConnection.uri}/ws',
-      ).then((client) => client.dispose()),
+      vmServiceConnectUri('${context.debugConnection.uri}/ws')
+          .then((client) => client.dispose()),
       completes,
     );
   });
