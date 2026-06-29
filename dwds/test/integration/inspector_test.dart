@@ -10,7 +10,7 @@ import 'package:dwds/dwds.dart';
 import 'package:dwds/src/config/tool_configuration.dart';
 import 'package:dwds/src/debugging/chrome_inspector.dart';
 import 'package:dwds/src/utilities/conversions.dart';
-import 'package:dwds/testing/project.dart';
+import 'package:dwds_test_common/fixtures/project.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';

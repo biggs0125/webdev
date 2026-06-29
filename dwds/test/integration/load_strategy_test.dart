@@ -8,10 +8,10 @@ library;
 
 import 'package:dwds/dwds.dart';
 import 'package:dwds/src/config/tool_configuration.dart';
-import 'package:dwds/testing/context.dart';
-import 'package:dwds/testing/fakes.dart';
-import 'package:dwds/testing/project.dart';
-import 'package:dwds/testing/utilities.dart';
+import 'package:dwds_test_common/fixtures/context.dart';
+import 'package:dwds_test_common/fixtures/fakes.dart';
+import 'package:dwds_test_common/fixtures/project.dart';
+import 'package:dwds_test_common/fixtures/utilities.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';

@@ -6,7 +6,7 @@
 @Timeout(Duration(minutes: 2))
 library;
 
-import 'package:dwds/testing/integration/dds_port.dart';
+import 'package:dwds_test_common/fixtures/integration/dds_port.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 

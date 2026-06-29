@@ -9,7 +9,7 @@ import 'dart:io';
 
 import 'package:dwds/src/handlers/injector.dart';
 import 'package:dwds/src/version.dart';
-import 'package:dwds/testing/utilities.dart';
+import 'package:dwds_test_common/fixtures/utilities.dart';
 import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;

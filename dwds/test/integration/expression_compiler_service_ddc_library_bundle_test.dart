@@ -8,7 +8,7 @@
 library;
 
 import 'package:dwds/expression_compiler.dart';
-import 'package:dwds/testing/integration/expression_compiler_service.dart';
+import 'package:dwds_test_common/fixtures/integration/expression_compiler_service.dart';
 import 'package:test/test.dart';
 
 void main() async {

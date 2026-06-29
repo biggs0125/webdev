@@ -7,7 +7,7 @@
 library;
 
 import 'package:dwds/expression_compiler.dart';
-import 'package:dwds/testing/integration/callstack.dart';
+import 'package:dwds_test_common/fixtures/integration/callstack.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 

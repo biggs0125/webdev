@@ -6,7 +6,7 @@
 library;
 
 import 'package:dwds/src/utilities/shared.dart';
-import 'package:dwds/testing/context.dart';
+import 'package:dwds_test_common/fixtures/context.dart';
 import 'package:test/test.dart';
 import 'package:vm_service/vm_service.dart';
 

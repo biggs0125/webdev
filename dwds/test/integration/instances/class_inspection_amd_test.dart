@@ -8,7 +8,7 @@
 library;
 
 import 'package:dwds/expression_compiler.dart';
-import 'package:dwds/testing/integration/class_inspection.dart';
+import 'package:dwds_test_common/fixtures/integration/class_inspection.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 

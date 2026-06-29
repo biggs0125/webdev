@@ -5,7 +5,7 @@
 @Timeout(Duration(minutes: 2))
 library;
 
-import 'package:dwds/testing/project.dart';
+import 'package:dwds_test_common/fixtures/project.dart';
 import 'package:dwds_test_common/test_sdk_configuration.dart';
 import 'package:test/test.dart';
 

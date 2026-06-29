@@ -7,8 +7,8 @@ library;
 
 import 'package:dwds/src/debugging/location.dart';
 import 'package:dwds/src/utilities/dart_uri.dart';
-import 'package:dwds/testing/fakes.dart';
-import 'package:dwds/testing/utilities.dart';
+import 'package:dwds_test_common/fixtures/fakes.dart';
+import 'package:dwds_test_common/fixtures/utilities.dart';
 import 'package:test/test.dart';
 
 final sourceMapContents =
